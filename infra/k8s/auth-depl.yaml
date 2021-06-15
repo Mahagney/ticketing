@@ -2,29 +2,35 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auth-depl
-spec: 
+spec:
   replicas: 1
   selector:
-    matchLabels: 
+    matchLabels:
       app: auth
-  template: 
-    metadata: 
-      labels: 
+  template:
+    metadata:
+      labels:
         app: auth
     spec:
-      containers: 
+      containers:
         - name: auth
-          image:  mahagney/auth
+          image: mahagney/auth
+          env:
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
 ---
 apiVersion: v1
 kind: Service
-metadata: 
+metadata:
   name: auth-srv
-spec: 
+spec:
   selector:
     app: auth
-  ports: 
-    - name: auth 
+  ports:
+    - name: auth
       protocol: TCP
       port: 3000
       targetPort: 3000

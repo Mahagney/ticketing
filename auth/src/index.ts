@@ -12,7 +12,7 @@ import { errorHandler } from "./middlewares/error-handler";
 import { NotFoundError } from "./errors/not-fount-error";
 
 const app = express();
-app.set("trist proxy", true);
+app.set("trust proxy", true);
 app.use(json());
 app.use(
   cookieSession({
@@ -34,6 +34,10 @@ app.all("*", async (req, res, next) => {
 app.use(errorHandler);
 
 const start = async () => {
+  if (!process.env.JWT_KEY) {
+    throw new Error("JWT_KEY missing");
+  }
+
   try {
     await mongoose.connect("mongodb://auth-mongo-srv:27017/auth", {
       useNewUrlParser: true,
